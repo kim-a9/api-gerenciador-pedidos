@@ -1,0 +1,30 @@
+const orderService = require('../service/orderService');
+
+
+exports.create = async (req, res) => {
+        try {
+            const orderData = await orderService.createOrder(req.body);
+            
+
+            return res.status(201).json(orderData);
+        } catch (error) {
+            if (error.code === '23505') {
+                return res.status(409).json({message: "Este pedido já existe."})
+            } 
+
+            return res.status(400).json({ message: "Erro ao criar o pedido: " + error.message});
+        }
+    }
+
+exports.getById = async (req, res) => {
+    try {
+        const order = await orderService.getOrder(req.params.orderId);
+
+        if (!order) {
+           return res.status(404).json({ message: "Não foi possível buscar o pedido. Verifique o Id."})
+        }
+        return res.status(200).json(order)
+    } catch (error) {
+        return res.status(400).json({ message: "Erro na busca", error: error.message})
+    }
+}
