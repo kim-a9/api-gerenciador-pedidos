@@ -28,3 +28,18 @@ exports.getById = async (req, res) => {
         return res.status(400).json({ message: "Erro na busca", error: error.message})
     }
 }
+
+exports.getAll = async (req, res) =>  {
+    try {
+        const orders = await orderService.getAll();
+
+        return res.status(200).json(orders);
+    } catch(error) {
+        return res.status(404).json({ error: "Não foi possível buscar pedidos.", error: error.message})
+    }
+}   
+
+
+
+
+
