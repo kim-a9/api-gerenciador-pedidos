@@ -22,7 +22,16 @@ class OrderService {
                 quantity: item.quantidadeItem,
                 price: item.valorItem
             }))
-        };
+        }
+
+        const existingOrder = await this.orderRepository.findOne({
+            where: { orderId: sanitizedId },
+            relations: ["items"]
+        });
+
+        if (existingOrder) {
+            throw new Error("O pedido já existe no banco de dados. Atualize as informações do pedido.")
+        }
 
         const newOrder = this.orderRepository.create(mappedOrder);
         return await this.orderRepository.save(newOrder);
@@ -37,7 +46,11 @@ class OrderService {
 
     }
 
-
+    async getAll() {
+        return await this.orderRepository.find({ 
+            relations: ["items"],
+        });
+    }
 }
 
 
