@@ -85,7 +85,14 @@ class OrderService {
         return await this.orderRepository.save(order);
     }
 
+    async delete(orderId) {
+        const dltOrder = await this.getOrder(orderId);
 
+        if (!dltOrder) {
+            return null;
+        }
+        return await this.orderRepository.remove(dltOrder);
+    }
 
 
 }

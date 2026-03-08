@@ -55,6 +55,21 @@ exports.update = async (req, res) => {
     }
 }
 
+exports.delete = async (req, res) => {
+    try {
+        
+        const dltOrder = await orderService.delete(req.params.orderId);
+
+        if (!dltOrder) {
+            return res.status(404).json({ message: "Não foi possível encontrar o pedido."});
+        }
+        return res.status(204).send();
+
+    } catch (error) {
+        return res.status(400).json({ message: "Erro ao deletar pedido: ", error: error.message})
+    }
+}
+
 
 
 
