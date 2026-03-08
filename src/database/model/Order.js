@@ -1,14 +1,21 @@
-const mongoose = require('mongoose');
+const { EntitySchema} = require('typeorm');
 
-const OrderSchema = new mongoose.Schema({
-    orderId: {type: String, required: true}, 
-    value: {type: Number,  required: true},
-    creationDate: {type: Date, required: true},
-    items: [{
-        productId: { type: String, required: true}, 
-        quantity: { type: Number, required: true},
-        price: { type: Number, required: true}
-    }]
-}, { versionKey: '__v' });
-
-module.exports = mongoose.model('Order', OrderSchema);
+module.exports = new EntitySchema({
+    name: 'Order',
+    tableName: 'orders',
+    columns: {
+        id: { type: 'int', primaryKey: true, generated: true},
+        orderId: { type: 'varchar', primary: true, unique: true },
+        value: { type: 'decimal', precision: 10, scale: 2 },
+        creationDate: {type: "timestamp"}
+    },
+    relations: {
+        items: {
+            target: 'OrderItem',
+            type: 'one-to-many',
+            joinColumn: { name: 'order' },
+            cascade: true,
+            inverseSide: 'order',
+        }
+    }
+})
