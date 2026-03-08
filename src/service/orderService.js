@@ -29,6 +29,14 @@ class OrderService {
 
     }
 
+    async getOrder(orderId) {
+        return await this.orderRepository.findOne({
+            where: { orderId: orderId },
+            relations: ["items"]
+        });
+
+    }
+
 
 }
 
