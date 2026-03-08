@@ -39,6 +39,22 @@ exports.getAll = async (req, res) =>  {
     }
 }   
 
+exports.update = async (req, res) => {
+    try {
+        const idItem = req.params.orderId;
+        const orderFound = req.body.items;
+
+        const updateOrder = await orderService.update(idItem, orderFound);
+
+        if(!updateOrder) {
+            return res.status(404).json({ message: "Não foi possível encontrar o pedido."})
+        }
+        return res.status(200).json({ message: "Pedido atualizado com sucesso"});
+    } catch (error) {
+        return res.status(400).json({message: "Erro ao atualizar: ", error: error.message})
+    }
+}
+
 
 
 

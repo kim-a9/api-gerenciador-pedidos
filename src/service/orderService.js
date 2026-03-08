@@ -51,6 +51,43 @@ class OrderService {
             relations: ["items"],
         });
     }
+
+    async update(orderId, updateItems) {
+        const order = await this.orderRepository.findOne({
+            where: { orderId: orderId },
+            relations: ["items"]
+        });
+
+        if (!order) {
+            return null;
+        }
+
+        //para atualizar, vou percorrer cada item atualizando e 
+        // realizando o mapping nos campos necessários
+        updateItems.forEach(updateItem => {
+            const prodId = Number(updateItem.idItem);
+
+            const existingItem = order.items.find(existing => existing.productId === prodId);
+            if (existingItem) { //atualiza a quantidade de itens
+                existingItem.quantity = (existingItem.quantity + updateItem.quantidadeItem);
+            } else { //adiciona novos itens caso necessário
+                order.items.push({
+                    productId: prodId,
+                    quantity: updateItem.quantidadeItem,
+                    price: updateItem.valorItem
+                });
+            }
+        });
+
+        //recalcula valor total do pedido
+        order.value = order.items.reduce((acc, item) => acc + (item.quantity * item.price), 0);
+
+        return await this.orderRepository.save(order);
+    }
+
+
+
+
 }
 
 
