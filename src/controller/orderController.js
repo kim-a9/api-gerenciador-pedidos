@@ -28,3 +28,49 @@ exports.getById = async (req, res) => {
         return res.status(400).json({ message: "Erro na busca", error: error.message})
     }
 }
+
+exports.getAll = async (req, res) =>  {
+    try {
+        const orders = await orderService.getAll();
+
+        return res.status(200).json(orders);
+    } catch(error) {
+        return res.status(404).json({ error: "Não foi possível buscar pedidos.", error: error.message})
+    }
+}   
+
+exports.update = async (req, res) => {
+    try {
+        const idItem = req.params.orderId;
+        const orderFound = req.body.items;
+
+        const updateOrder = await orderService.update(idItem, orderFound);
+
+        if(!updateOrder) {
+            return res.status(404).json({ message: "Não foi possível encontrar o pedido."})
+        }
+        return res.status(200).json(updateOrder);
+    } catch (error) {
+        return res.status(400).json({message: "Erro ao atualizar: ", error: error.message})
+    }
+}
+
+exports.delete = async (req, res) => {
+    try {
+        
+        const dltOrder = await orderService.delete(req.params.orderId);
+
+        if (!dltOrder) {
+            return res.status(404).json({ message: "Não foi possível encontrar o pedido."});
+        }
+        return res.status(204).send();
+
+    } catch (error) {
+        return res.status(400).json({ message: "Erro ao deletar pedido: ", error: error.message})
+    }
+}
+
+
+
+
+

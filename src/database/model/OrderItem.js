@@ -6,7 +6,7 @@ module.exports = new EntitySchema({
     tableName: 'order_items',
     columns: {
         id: { primary: true, type: 'int',  generated: true},
-        productId: {type: 'int', unique: true },
+        productId: {type: 'int'},
         quantity: { type: 'int'},
         price: { type: 'decimal'},
     },
