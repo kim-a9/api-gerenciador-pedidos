@@ -80,7 +80,7 @@ class OrderService {
         });
 
         //recalcula valor total do pedido
-        order.value = order.items.reduce((acc, item) => acc + (item.quantity * item.price), 0);
+        order.value = Math.round(order.items.reduce((acc, item) => acc + (item.quantity * item.price), 0) * 100);
 
         return await this.orderRepository.save(order);
     }
